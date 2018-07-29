@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale-1.0, user-scalable=no">
+
+
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="style.css">
+
+		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAQXZTNBfR4SsjJNEQ7BhQhKNI7iEaLLjk">
+		</script>
+
+
+		<script>
+		var map;
+		var infowindow;
+		var request;
+		var service;
+		var markers = [];
+		function initialize(){
+			var center = new google.maps.LatLng(37.7820684,-122.4153897);
+			map = new google.maps.Map(document.getElementById('map'), {
+				center: center,
+				zoom: 13.5
+			});
+			
+			//google requires a specific format for request.
+			request = {
+				location: center,
+				radius: 8047, //about 5 miles radius in meters
+				types: ['church']
+			};
+			infowindow = new google.maps.InfoWindow();
+			service = new google.maps.places.PlacesService(map);
+			service.nearbySearch(request, callback);
+			google.maps.event.addListener(map, 'rightclick', function(event) {
+				map.setCenter(event.latLng)
+				clearResults(markers)
+				var request = {
+					location: event.latLng,
+					radius: 8047,
+					types: ['church']
+				};
+				service.nearbySearch(request, callback);
+			})
+			var myLatLng = {lat:37.7820684, lng: -122.4153897};
+			 
+			var marker2 = new google.maps.Marker({
+			    position: myLatLng,
+			    map: map,
+			    title: 'St. Anthony\s'
+			 });
+			
+			var infoWindowContent = '<div class="info_content">' +
+        	'<h3>St. Anthony\'s</h3>' +
+        	'<p> St. Anthony\'s is a safe, welcoming place for <b> individuals, community groups</b> and <b> corporate teams </b> to volunteer in a way that has a profound impact on needy San Franciscans and is deeply rewarded for participants.</p>' +
+    		'</div>';
+			var infoWindow = new google.maps.InfoWindow({
+        	content: infoWindowContent
+    		});
+			google.maps.event.addListener(marker2, 'click', function() {
+        	infoWindow.open(map, marker2);
+   			});
+        }
+		//make sure we get back good results, no errors
+		function callback(results, status){
+			if(status == google.maps.places.PlacesServiceStatus.OK){
+				for(var i = 0; i < results.length; i++){
+					markers.push(createMarker(results[i]));
+				}
+			}
+		}
+		function createMarker(place){
+			var placeLoc = place.geometry.location;
+			var marker = new google.maps.Marker({
+				map: map,
+				position: place.geometry.location
+			});
+			//Listener for individual marker's info 
+			google.maps.event.addListener(marker, 'click', function(){
+				infowindow.setContent(place.name);
+				infowindow.open(map, this);
+			});
+			return marker;
+		}
+		function clearResults(markers)
+		{
+			for(var m in markers){
+				markers[m].setMap(null)
+			}
+			markers = []
+		}
+		google.maps.event.addDomListener(window, 'load', initialize);
+			//wait for window to load then call initialize
+		</script>
+
+	</head>
+
+	<body>
+	
+
+		<!--<h1 id="title">Logo Name</h1>-->
+
+ 			<img src="logo.jpg" style="width:15%;padding: 20px" >
+            <div class="form-group" align="right">
+                Username: 
+                <input type="text" name="username" /><br>
+                Password: 
+                <input type="password" name="password" /><br />
+                <br />
+                <a href="makeAccount.html">Don't have an account? Make one here!</a>
+                <br />
+
+                <button type="submit" class="btn btn-info"><a href="#">Submit</a></button>
+
+
+            </div>
+
+        </form>
+
+
+
+
+
+
+
+
+    <!--Nagivation bar-->
+ 
+    <nav class="navbar navbar-default" >
+        <div class="container-fluid">
+
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="review.html">Experience</a></li>
+                <li ><a href="reward.html">Reward</a></li>
+                <li><a href="myProfile.html">Account</a></li>
+            </ul>
+        </div>
+    </nav>
+
+
+   					<!--Search--> 
+
+   	<div class="row">
+   		<div class = "col"> 
+			<form id="search-form">
+    			<div class="search">
+      				<input type="text" name="search" class="round" />
+      				<input type="submit" class="corner" value="" />
+    			</div>
+			</form>
+		</div>
+
+		<div class = "col" id="sortDropDown">
+			<div class="selectWrapper">
+			  <select class="selectBox">
+			  <option><b>Sort: Distance </b></option>
+			  <option><b>Sort: Reviews  </b></option>
+
+			</select>
+			</div>
+		</div>
+	</div>
+	<!--LIST RESULT LEFT-->
+
+	<div class="row">
+
+		<div class="col"> 
+			
+			<div class="list-group" id="leftReview">
+		  		<a href="addEvent.html" class="list-group-item list-group-item-action flex-column align-items-start">
+		   			<div class="d-flex w-100 justify-content-between">
+		      			<h2 class="mb-1">St. Anthony Dining Room</h2>
+		      			<a href="#" class="badge badge-dark" style="margin-top: 10px">12 Active Posting</a>
+		      			<p style="margin-left: 5px"> St. Anthony's is a safe, welcoming place for <b> individuals, community groups</b> and <b> corporate teams </b> to volunteer in a way that has a profound impact on needy San Franciscans and is deeply rewarded for participants.</p>
+		    		</div>
+
+		   		
+		   		 	<p class="mb-1" style="margin-top: 10px">1121 Golden Gate Ave, Floor 1, San Francisco, CA 94102                                  <b> 0.1 mi </b></p>
+		   		 	<img src="STAR.jpg" height = 25% width = 25% style="margin-left: 5px">
+		    		<small>4.9         (22 Reviews)</small>
+		 		</a>
+
+		  		<a href="addEvent.html" class="list-group-item list-group-item-action flex-column align-items-start">
+		   			<div class="d-flex w-100 justify-content-between">
+		      			<h2 class="mb-1">Project Open Hand</h2>
+		      			<a href="#" class="badge badge-dark" style="margin-top: 10px">7 Active Posting</a>
+		      			<p style="margin-left: 5px"> Our mission is to nourish and engage our community by providing nutritious 'meals with love' to the sick and the elderly.</p>
+		    		</div>
+
+		   		
+		   		 	<p class="mb-1" style="margin-top: 10px">730 Polk St, San Francisco, CA 94109 <b> 0.5 mi </b></p>
+		   		 	<img src="STAR.jpg" height = 25% width = 25% style="margin-left: 5px">
+		    		<small>4.4         (53 Reviews)</small>
+		 		</a>
+		  
+		  		<a href="addEvent.html" class="list-group-item list-group-item-action flex-column align-items-start">
+		   			<div class="d-flex w-100 justify-content-between">
+		      			<h2 class="mb-1">Martin de Porres House of Hospitality</h2>
+		      			<a href="#" class="badge badge-dark" style="margin-top: 10px margin-left: 50px">4 Active Posting</a>
+		      			<p style="margin-left: 5px">Martin's, as it is affectionately known, is a free restaurant, serving breakfast and lunch during the week and brunch on Sundays. Our mission is to serve in the spirit of compassion, understanding and love.</p>
+		    		</div>
+
+		   		
+		   		 	<p class="mb-1" style="margin-top: 10px">225 Potrero Ave, San Francisco, CA 94103 <b>1.6 miles </b></p>
+		   		 	<img src="STAR.jpg" height = 25% width = 25% style="margin-left: 5px">
+		    		<small>4.6         (80 Reviews)</small>
+		 		</a>
+
+		  	</div>
+		</div>
+		<div class="col"> 
+			<div id="map" style="width:800px;height:800px">></div>
+		</div>
+
+	</div>
+
+	</body>
+
+
+</html>
